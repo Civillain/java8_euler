@@ -41,7 +41,7 @@ public class EulerUtils {
 		return true;
 	}
 
-	static <T> Stream<T> zip(BinaryOperator<T> aggregator, Supplier<Stream<T>>... streams) {
+	static <T> Stream<T> cartesian(BinaryOperator<T> aggregator, Supplier<Stream<T>>... streams) {
 		return Arrays
 				.stream(streams)
 				.reduce((s1, s2) -> () -> s1.get().flatMap(

@@ -47,7 +47,9 @@ public class Euler009 {
 			long c = m*m + n*n;
 			return a*b*c;
 		})
-		.sum();
+		.filter(i -> i > 0)
+		.findFirst()
+		.getAsLong();
 		
 		System.out.println(r);
 		
