@@ -1,4 +1,4 @@
-Enter file contents herepackage problems;
+package problems;
 
 import static org.junit.Assert.assertEquals;
 
