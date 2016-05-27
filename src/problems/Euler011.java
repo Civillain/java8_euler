@@ -14,13 +14,7 @@ import org.junit.Test;
  * 
  * Each element of the for-loop, the stop-condition and the next-expression, are extracted
  * and turned into isolated testable functions.  
- * 
- * The logic to calculate the product is also encapsulated in a single function. The filter
- * is added so that a predicate can be used to evaluate whether to stop or not. Java lacks
- * a takeWhile() statement but it can be easily simulated with a filter with a function that 
- * takes two arguments and returns a boolean.
- * 
- * 
+ *
  * @author rko
  *
  */
