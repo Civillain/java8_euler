@@ -9,6 +9,21 @@ import java.util.stream.Stream;
 
 import org.junit.Test;
 
+/**
+ * All for-loops have been factored out and replaced with streams and a composition of functions.
+ * 
+ * Each element of the for-loop, the stop-condition and the next-expression, are extracted
+ * and turned into isolated testable functions.  
+ * 
+ * The logic to calculate the product is also encapsulated in a single function. The filter
+ * is added so that a predicate can be used to evaluate whether to stop or not. Java lacks
+ * a takeWhile() statement but it can be easily simulated with a filter with a function that 
+ * takes two arguments and returns a boolean.
+ * 
+ * 
+ * @author rko
+ *
+ */
 public class Euler011 {
 
 	@Test
@@ -42,36 +57,29 @@ public class Euler011 {
 
 		final int adjLength = 4;
 		final int rowlength = 20;
-
-		Function<Integer, Integer> right = i ->    {
-			int r = 1;
-			for (int a = i; a < i + adjLength && a < data.length; a++) {
-				r *= data[a];
-			}
-			return r;
-		};
-		Function<Integer, Integer> down = i ->  {
-			int r = 1;
-			for (int a = i; a < i + (adjLength * rowlength) && a < data.length; a = a + rowlength) {
-				r *= data[a];
-			}
-			return r;
-		};
-		Function<Integer, Integer> diag_rd = i -> {
-			int r = 1;
-			for (int a = i; a > i - (adjLength * rowlength) + adjLength && a < data.length && a >= 0; a = a - rowlength + 1) {
-				r *= data[a];
-			}
-			return r;
-		};
-		Function<Integer, Integer> diag_ru = i ->  {
-			int r = 1;
-			for (int a = i; a < i + (adjLength * rowlength) + adjLength && a < data.length && a >= 0; a = a + rowlength + 1) {
-				r *= data[a];
-			}
-			return r;
-		};
-		List<Function<Integer, Integer>> functions = Arrays.asList(right, down, diag_rd, diag_ru);
+		
+		Function<Function<Integer, Integer>, Function<Function<Integer, Function<Integer, Boolean>>, Function<Integer, Integer>>> product = 
+									producer -> predicate -> i -> 
+												Stream.iterate(i, n -> producer.apply(n))
+													.limit(adjLength)
+													.filter(n -> predicate.apply(n).apply(i))
+													.map(n -> data[n])
+													.reduce(1, (a, b) -> a * b);
+		
+		Function<Integer, Integer> moveRight = i -> i + 1;
+		Function<Integer, Integer> moveDown = i -> i + rowlength;
+		Function<Integer, Integer> moveRightDown = i -> i - rowlength + 1;
+		Function<Integer, Integer> moveRightUp = i -> i + rowlength + 1;
+		
+		Function<Integer, Function<Integer, Boolean>> rightStop = n -> i -> n < i + adjLength && n < data.length;
+		Function<Integer, Function<Integer, Boolean>> downStop = n -> i -> n < i + (adjLength * rowlength) && n < data.length;
+		Function<Integer, Function<Integer, Boolean>> rightDownStop = n -> i -> n > i - (adjLength * rowlength) + adjLength && n < data.length && n >= 0;
+		Function<Integer, Function<Integer, Boolean>> rightUpStop = n -> i -> n < i + (adjLength * rowlength) + adjLength && n < data.length && n >= 0;
+		
+		List<Function<Integer, Integer>> functions = Arrays.asList(product.apply(moveRight).apply(rightStop), 
+																	product.apply(moveDown).apply(downStop), 
+																	product.apply(moveRightDown).apply(rightDownStop), 
+																	product.apply(moveRightUp).apply(rightUpStop));
 		
 		int max = Stream.iterate(0, i -> i + 1).limit(data.length - 1)
 					.map(i ->  functions.stream().map(f -> f.apply(i))
@@ -80,7 +88,7 @@ public class Euler011 {
 					.mapToInt(o -> (Integer) o)
 					.max().getAsInt();
 		
-	assertEquals(70600674, max);
-	System.out.println(max);
+		assertEquals(70600674, max);
+		System.out.println(max);
 	}
 }
