@@ -1,5 +1,7 @@
 package problems;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,11 +23,12 @@ public class Euler012 {
 		
 		primes.add(2l);
 		
-		Long result = Stream.iterate(2l, n -> n + 1).limit(Integer.MAX_VALUE)
+		long result = Stream.iterate(2l, n -> n + 1).limit(Integer.MAX_VALUE)
 			.map(n ->  triangle.apply(n) )
 			.filter(n ->  countDivisors.apply(sumDivisors.apply(primeFactors.apply(n))) > 500)
 			.findFirst().get();
 		
+		assertEquals(76576500, result);
 		System.out.println(result);
 	}
 	
