@@ -16,14 +16,14 @@ import org.junit.Test;
 
 public class Euler012 {
 	
-	private List<Long> primes = new ArrayList<>(1000);
+	private List<Integer> primes = new ArrayList<>(1100);
 	
 	@Test
 	public void test() {
 		
-		primes.add(2l);
+		primes.add(2);
 		
-		long result = Stream.iterate(2l, n -> n + 1).limit(Integer.MAX_VALUE)
+		int result = Stream.iterate(2, n -> n + 1).limit(Integer.MAX_VALUE)
 			.map(n ->  triangle.apply(n) )
 			.filter(n ->  countDivisors.apply(sumDivisors.apply(primeFactors.apply(n))) > 500)
 			.findFirst().get();
@@ -32,43 +32,43 @@ public class Euler012 {
 		System.out.println(result);
 	}
 	
-	Function<Long, Long> triangle = n -> (n * (n + 1)) / 2;
+	Function<Integer, Integer> triangle = n -> (n * (n + 1)) / 2;
 	
-	Function<Map<Long, Long>, Long> countDivisors = m -> m.values().stream().map(d -> d + 1).reduce((a,b) -> a * b).get();
+	Function<Map<Integer, Integer>, Integer> countDivisors = m -> m.values().stream().map(d -> d + 1).reduce((a,b) -> a * b).get();
 	
-	Supplier<Map<Long, Long>> map = () -> new HashMap<Long, Long>();
+	Supplier<Map<Integer, Integer>> map = () -> new HashMap<Integer, Integer>();
 	
-	Function<List<Long>, Map<Long, Long>> sumDivisors = l -> l.stream().collect(Collectors.toMap(i -> i, i -> 1l, Long::sum, map));
+	Function<List<Integer>, Map<Integer, Integer>> sumDivisors = l -> l.stream().collect(Collectors.toMap(i -> i, i -> 1, Integer::sum, map));
 	
 	
-    Function<Long, Boolean> isPrime = n -> {
+    Function<Integer, Boolean> isPrime = n -> {
 		if (n < 2) return false;
 		if (n == 2 || n == 3) return true;
 		if (n % 2 == 0 || n % 3 == 0) return false;
-		long sqrtN = (long) Math.sqrt(n) + 1;
-		for (long i = 6L; i <= sqrtN; i += 6) {
+		int sqrtN = (int) Math.sqrt(n) + 1;
+		for (int i = 6; i <= sqrtN; i += 6) {
 			if (n % (i - 1) == 0 || n % (i + 1) == 0) return false;
 		}
 		return true;
 	};
     
-    Consumer<Long> findPrimes = n -> {
-    	long lastPrime = primes.get(primes.size()-1); // primes must be initialized with 2
-    	for(long i = lastPrime+1; i*i < n; i++ ) {
+    Consumer<Integer> findPrimes = n -> {
+    	int lastPrime = primes.get(primes.size()-1); // primes must be initialized with 2
+    	for(int i = lastPrime+1; i*i < n; i++ ) {
     		if(isPrime.apply(i)) {
     			primes.add(i);
     		}
     	}
     };
     
-    Function<Long, List<Long>> primeFactors = n -> { 
+    Function<Integer, List<Integer>> primeFactors = n -> { 
 
 		findPrimes.accept(n); // find the next primes up to sqrt(n)
 		
-		List<Long> pFactors = new ArrayList<>();
+		List<Integer> pFactors = new ArrayList<>();
         // for each potential factor i
         for (int i = 0; i < primes.size(); i++) {
-        	long prime = primes.get(i);
+        	int prime = primes.get(i);
             // if i is a factor of N, repeatedly divide it out
             while (n % prime == 0) {
             	pFactors.add(prime);
