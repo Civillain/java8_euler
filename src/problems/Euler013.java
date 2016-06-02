@@ -1,5 +1,12 @@
 package problems;
 
+import static org.junit.Assert.assertEquals;
+
+import java.math.BigInteger;
+import java.util.Arrays;
+
+import org.junit.Test;
+
 public class Euler013 {
 	String [] n = new String [] {
 	"37107287533902102798797998220837590246510135740250",
@@ -102,4 +109,17 @@ public class Euler013 {
 	"72107838435069186155435662884062257473692284509516",
 	"20849603980134001723930671666823555245252804609722",
 	"53503534226472524250874054075591789781264330331690"};
+	
+	@Test
+	public void test() {
+		BigInteger result = Arrays.stream(n, 0, n.length)
+			//.map(n -> n.substring(0, 8))
+			.map(n -> new BigInteger(n))
+			.reduce((a,b) -> a.add(b)).get();
+		BigInteger b10p40 = new BigInteger("10").pow(42);
+		result = result.divide(b10p40);
+		System.out.println(result);
+		assertEquals(5537376230l, result.longValue());
+		
+	}
 }
