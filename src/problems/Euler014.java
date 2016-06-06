@@ -21,8 +21,11 @@ public class Euler014 {
 	public void test() {
 		int pathLength = Stream.iterate(2l, n -> n + 1).limit(max)
 			.map(n -> {
-				int length = 1; // start at 1 because we're not counting the last element in the sequence, namely 1
-				while(n > 1) {  // the last element is not counted and is used as stop condition
+				// start at 1 because we're not counting the last element in the sequence, namely 1
+				int length = 1; 
+				// the last element is not counted and is used as stop condition
+				// the while-loop is not replaced with a lazy evaluated stream because the stop condition can't be implemented in java 8
+				while(n > 1) {  
 					if( (n % 2) == 0) {
 						n = n / 2;
 					} else {
