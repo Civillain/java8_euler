@@ -1,0 +1,20 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'Project Euler & Cryptopals',
+                   'Implementation-Version': 1.0
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // JAX-B dependencies for JDK 9+
+    implementation "jakarta.xml.bind:jakarta.xml.bind-api:2.3.2"
+    implementation "org.glassfish.jaxb:jaxb-runtime:2.3.2"
+}
