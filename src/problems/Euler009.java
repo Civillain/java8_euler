@@ -2,12 +2,7 @@ package problems;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.Optional;
-import java.util.OptionalInt;
-import java.util.OptionalLong;
-import java.util.stream.IntStream;
 import java.util.stream.LongStream;
-import java.util.stream.Stream;
 
 import org.junit.Test;
 
@@ -47,9 +42,7 @@ public class Euler009 {
 			long c = m*m + n*n;
 			return a*b*c;
 		})
-		.filter(i -> i > 0)
-		.findFirst()
-		.getAsLong();
+		.sum();
 		
 		System.out.println(r);
 		
